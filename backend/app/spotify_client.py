@@ -10,10 +10,10 @@ from .config import Settings
 AUTHORIZE_URL = "https://accounts.spotify.com/authorize"
 TOKEN_URL = "https://accounts.spotify.com/api/token"
 ME_URL = "https://api.spotify.com/v1/me"
+TOP_TRACKS_URL = "https://api.spotify.com/v1/me/top/tracks"
+TOP_ARTISTS_URL = "https://api.spotify.com/v1/me/top/artists"
 
-# Minimal scopes for a basic profile view. Extend later (e.g. user-top-read,
-# user-read-recently-played) when building the personal-vs-global comparison.
-SCOPES = "user-read-private user-read-email"
+SCOPES = "user-read-private user-read-email user-top-read"
 
 
 def build_authorize_url(settings: Settings, state: str) -> str:
@@ -69,6 +69,28 @@ async def get_current_user_profile(access_token: str) -> dict[str, Any]:
     async with httpx.AsyncClient() as client:
         response = await client.get(
             ME_URL,
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+async def get_top_tracks(access_token: str, time_range: str = "long_term", limit: int = 50) -> dict[str, Any]:
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            TOP_TRACKS_URL,
+            params={"time_range": time_range, "limit": limit},
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        response.raise_for_status()
+        return response.json()
+
+
+async def get_top_artists(access_token: str, time_range: str = "long_term", limit: int = 50) -> dict[str, Any]:
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            TOP_ARTISTS_URL,
+            params={"time_range": time_range, "limit": limit},
             headers={"Authorization": f"Bearer {access_token}"},
         )
         response.raise_for_status()

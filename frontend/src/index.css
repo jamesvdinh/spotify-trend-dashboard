@@ -7,6 +7,7 @@
   --spotify-elevated-hover: #282828;
   --spotify-text-subdued: #a7a7a7;
   --spotify-border: #2a2a2a;
+  --spotify-green-muted: rgba(29, 185, 84, 0.18);
 
   color-scheme: dark;
   font-family: "Helvetica Neue", Helvetica, Arial, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -212,4 +213,147 @@ button {
 
 .error-text {
   color: #f15e6c;
+}
+
+.taste-section {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.stat-tile {
+  background: var(--spotify-elevated);
+  border: 1px solid var(--spotify-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.stat-tile-label {
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--spotify-text-subdued);
+  font-weight: 700;
+}
+
+.stat-tile-value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.stat-tile-hint {
+  font-size: 0.8rem;
+  color: var(--spotify-text-subdued);
+}
+
+.meter-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--spotify-green-muted);
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.meter-fill {
+  height: 100%;
+  background: var(--spotify-green);
+  border-radius: 999px;
+}
+
+.top-tracks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.track-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  background: var(--spotify-elevated);
+  border: 1px solid var(--spotify-border);
+}
+
+.track-row:hover {
+  background: var(--spotify-elevated-hover);
+}
+
+.track-rank {
+  width: 1.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: var(--spotify-text-subdued);
+  flex-shrink: 0;
+}
+
+.track-art,
+.track-art-fallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--spotify-elevated-hover);
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.track-name {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-artists {
+  color: var(--spotify-text-subdued);
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.track-duration {
+  color: var(--spotify-text-subdued);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.reconnect-card {
+  background: var(--spotify-elevated);
+  border: 1px solid var(--spotify-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
 }
