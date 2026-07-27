@@ -12,7 +12,8 @@ def top_genre(artists: list[dict[str, Any]]) -> dict[str, Any] | None:
     if not artists:
         return None
 
-    counts = Counter(genre for artist in artists for genre in artist.get("genres", []))
+    counts = Counter(
+        genre for artist in artists for genre in artist.get("genres", []))
     if not counts:
         return None
 
@@ -34,13 +35,15 @@ def top_artist(artists: list[dict[str, Any]]) -> dict[str, Any] | None:
 
 
 def avg_popularity(tracks: list[dict[str, Any]]) -> float | None:
-    if not tracks:
+    values = [t["popularity"] for t in tracks if isinstance(t.get("popularity"), (int, float))]
+    if not values:
         return None
-    return round(fmean(t.get("popularity", 0) for t in tracks), 1)
+    return round(fmean(values), 1)
 
 
 def unique_artist_count(tracks: list[dict[str, Any]]) -> int:
-    ids = {artist["id"] for track in tracks for artist in track.get("artists", []) if artist.get("id")}
+    ids = {artist["id"] for track in tracks for artist in track.get(
+        "artists", []) if artist.get("id")}
     return len(ids)
 
 
