@@ -11,13 +11,9 @@ import {
 } from "recharts";
 import type { TooltipContentProps } from "recharts/types/component/Tooltip";
 import type { BarShapeProps } from "recharts/types/cartesian/Bar";
-import type { PersonalVsGlobalRow, TimeRange } from "../api";
-import {
-  CHART_COLORS,
-  PERSONAL_UNIVERSE_SIZE,
-  maxGlobalRank,
-  rankFraction,
-} from "./shared";
+import type { PersonalVsGlobalRow, TimeRange } from "../utils/types/trends";
+import { maxGlobalRank, rankFraction } from "../utils/rank";
+import { CHART_COLORS, PERSONAL_UNIVERSE_SIZE } from "./shared";
 import TimeRangeTabs from "./TimeRangeTabs";
 
 const TOP_N = 20;

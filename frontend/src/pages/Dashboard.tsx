@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { fetchProfile, logout, type SpotifyProfile } from "../api";
+import { fetchProfile, logout } from "../api";
+import type { SpotifyProfile } from "../utils/types/profile";
 import ProfileCard from "../components/ProfileCard";
 import TasteSection from "../components/TasteSection";
 import TrendsSection from "../components/TrendsSection";

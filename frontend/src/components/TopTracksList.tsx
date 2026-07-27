@@ -1,5 +1,5 @@
-import type { TasteTrack } from "../api";
-import { formatClock } from "../format";
+import type { TasteTrack } from "../utils/types/taste";
+import { formatClock } from "../utils/format";
 
 export default function TopTracksList({ tracks }: { tracks: TasteTrack[] }) {
   return (

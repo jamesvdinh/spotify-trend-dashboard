@@ -1,4 +1,4 @@
-import type { PersonalVsGlobalRow, TimeRange } from "../api";
+import type { TimeRange } from "../utils/types/trends";
 
 // Validated against this app's dark chart surface (#121212) with the dataviz
 // skill's validator - both pairs pass lightness/chroma/CVD/contrast checks.
@@ -22,16 +22,3 @@ export const TIME_RANGES: TimeRange[] = ["short_term", "medium_term", "long_term
 // backend/ingestion/spotify_snapshot.py), so 50 is the personal ranking's fixed
 // universe size.
 export const PERSONAL_UNIVERSE_SIZE = 50;
-
-/** Largest global_rank present in the rows - a proxy for the global chart's
- * universe size (Kworb's leaderboard covers ~3000 artists; using the observed
- * max keeps the normalization honest about what we actually queried). */
-export function maxGlobalRank(rows: PersonalVsGlobalRow[]): number {
-  return rows.reduce((max, r) => Math.max(max, r.global_rank), 1);
-}
-
-/** Normalizes a rank to 0..1 within its universe, where 1 = best possible rank (#1). */
-export function rankFraction(rank: number, universeMax: number): number {
-  if (universeMax <= 1) return 1;
-  return 1 - (rank - 1) / (universeMax - 1);
-}

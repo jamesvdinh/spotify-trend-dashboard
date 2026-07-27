@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchRaw, type RawEndpointResult } from "../api";
+import { fetchRaw } from "../api";
+import type { RawEndpointResult } from "../utils/types/apiExplorer";
 
 const ENDPOINTS = [
   { path: "/api/me", label: "Your Spotify profile" },

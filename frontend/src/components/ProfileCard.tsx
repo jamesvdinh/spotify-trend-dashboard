@@ -1,4 +1,4 @@
-import type { SpotifyProfile } from "../api";
+import type { SpotifyProfile } from "../utils/types/profile";
 
 export default function ProfileCard({ profile }: { profile: SpotifyProfile }) {
   const avatarUrl = profile.images?.[0]?.url;

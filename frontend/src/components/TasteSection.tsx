@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchTaste, loginUrl, type TasteData } from "../api";
+import { fetchTaste, loginUrl } from "../api";
+import type { TasteData } from "../utils/types/taste";
 import StatTile from "./StatTile";
 import PopularityMeter from "./PopularityMeter";
 import TopTracksList from "./TopTracksList";

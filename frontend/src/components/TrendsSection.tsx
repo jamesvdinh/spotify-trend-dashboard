@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchTrends, type PersonalVsGlobalRow } from "../api";
+import { fetchTrends } from "../api";
+import type { PersonalVsGlobalRow } from "../utils/types/trends";
 import MainstreamGapRecharts from "../charts/MainstreamGapRecharts";
 
 type Status = "loading" | "ready" | "error";

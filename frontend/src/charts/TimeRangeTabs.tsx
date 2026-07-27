@@ -1,4 +1,4 @@
-import type { TimeRange } from "../api";
+import type { TimeRange } from "../utils/types/trends";
 import { TIME_RANGES, TIME_RANGE_LABELS } from "./shared";
 
 export default function TimeRangeTabs({
