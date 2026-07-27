@@ -3,7 +3,7 @@ import asyncio
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from .. import taste_metrics
+from .. import bigquery_queries, taste_metrics
 from ..deps import get_access_token
 from ..spotify_client import get_current_user_profile, get_top_artists, get_top_tracks
 
@@ -49,3 +49,11 @@ async def taste(access_token: str = Depends(get_access_token)):
         "top_tracks": taste_metrics.format_top_tracks(tracks, limit=5),
         "metrics": taste_metrics.build_metrics(tracks, artists),
     }
+
+
+@router.get("/trends")
+async def trends(access_token: str = Depends(get_access_token)):
+    profile = await get_current_user_profile(access_token)
+    user_id = profile.get("id")
+    rows = await asyncio.to_thread(bigquery_queries.query_personal_vs_global, user_id)
+    return {"personal_vs_global": rows}

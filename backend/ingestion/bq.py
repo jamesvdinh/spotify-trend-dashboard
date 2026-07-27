@@ -1,18 +1,12 @@
-"""Shared BigQuery client + load helper for ingestion scripts."""
-import os
-
+"""Load helper for ingestion scripts. get_client() lives in app.bigquery_client
+(shared with the FastAPI serving layer) and is re-exported here so existing
+`bq.get_client()` calls in the ingestion scripts keep working unchanged.
+"""
 from google.cloud import bigquery
 
-from app.config import get_settings
+from app.bigquery_client import get_client
 
-
-def get_client() -> bigquery.Client:
-    settings = get_settings()
-    if settings.google_application_credentials:
-        os.environ.setdefault(
-            "GOOGLE_APPLICATION_CREDENTIALS", settings.google_application_credentials
-        )
-    return bigquery.Client(project=settings.bq_project_id)
+__all__ = ["get_client", "load_rows"]
 
 
 def load_rows(client: bigquery.Client, table: str, rows: list[dict]) -> None:

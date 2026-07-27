@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { fetchProfile, logout, type SpotifyProfile } from "../api";
 import ProfileCard from "../components/ProfileCard";
 import TasteSection from "../components/TasteSection";
+import ApiExplorer from "../components/ApiExplorer";
 
 type Status = "loading" | "authed" | "unauthed" | "error";
 
@@ -48,6 +49,7 @@ export default function Dashboard() {
       <div className="dashboard">
         <ProfileCard profile={profile} />
         <TasteSection />
+        <ApiExplorer />
         <div className="dashboard-actions">
           <span className="status-text">Connected to Spotify</span>
           <button

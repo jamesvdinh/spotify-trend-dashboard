@@ -347,6 +347,99 @@ button {
   flex-shrink: 0;
 }
 
+.api-explorer {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.api-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.api-card {
+  background: var(--spotify-elevated);
+  border: 1px solid var(--spotify-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.api-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.api-step-number {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--spotify-green-muted);
+  color: var(--spotify-green-bright);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.api-card-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.api-endpoint {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.api-label {
+  color: var(--spotify-text-subdued);
+  font-size: 0.85rem;
+}
+
+.api-status {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.api-status-ok {
+  background: var(--spotify-green-muted);
+  color: var(--spotify-green-bright);
+}
+
+.api-status-error {
+  background: rgba(241, 94, 108, 0.18);
+  color: #f15e6c;
+}
+
+.api-json {
+  margin: 0;
+  background: var(--spotify-black);
+  border: 1px solid var(--spotify-border);
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--spotify-text-subdued);
+  max-height: 320px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
 .reconnect-card {
   background: var(--spotify-elevated);
   border: 1px solid var(--spotify-border);

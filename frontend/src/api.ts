@@ -76,3 +76,26 @@ export async function logout(): Promise<void> {
 export function loginUrl(): string {
   return `${BACKEND_URL}/auth/login`;
 }
+
+export interface RawEndpointResult {
+  path: string;
+  status: number;
+  ok: boolean;
+  body: unknown;
+}
+
+/**
+ * Hits an endpoint directly and returns its raw status + body, bypassing the
+ * typed fetchers above - used by the API explorer view so it shows exactly
+ * what the backend returns (including error responses), not a parsed shape.
+ */
+export async function fetchRaw(path: string): Promise<RawEndpointResult> {
+  const response = await fetch(`${BACKEND_URL}${path}`, { credentials: "include" });
+  let body: unknown = null;
+  try {
+    body = await response.json();
+  } catch {
+    // non-JSON or empty body - leave as null
+  }
+  return { path, status: response.status, ok: response.ok, body };
+}
