@@ -450,3 +450,99 @@ button {
   gap: 0.75rem;
   align-items: flex-start;
 }
+
+/* --- shared chart chrome --- */
+
+.chart-filter-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.chart-filter-tab {
+  background: transparent;
+  color: var(--spotify-text-subdued);
+  border: 1px solid var(--spotify-border);
+  border-radius: 999px;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.chart-filter-tab:hover {
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.chart-filter-tab-active {
+  background: var(--spotify-green-muted);
+  border-color: var(--spotify-green);
+  color: var(--spotify-green-bright);
+}
+
+.chart-legend {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--spotify-text-subdued);
+}
+
+.chart-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chart-canvas {
+  position: relative;
+  width: 100%;
+}
+
+.chart-tooltip {
+  position: absolute;
+  transform: translate(-50%, -120%);
+  background: var(--spotify-black);
+  border: 1px solid var(--spotify-border);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.8rem;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+}
+
+.chart-tooltip-static {
+  position: static;
+  transform: none;
+  box-shadow: none;
+}
+
+.chart-tooltip-title {
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.35rem;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  color: var(--spotify-text-subdued);
+}
+
+.chart-tooltip-row strong {
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+}

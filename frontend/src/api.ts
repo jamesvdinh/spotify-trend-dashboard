@@ -77,6 +77,33 @@ export function loginUrl(): string {
   return `${BACKEND_URL}/auth/login`;
 }
 
+export type TimeRange = "short_term" | "medium_term" | "long_term";
+
+export interface PersonalVsGlobalRow {
+  time_range: TimeRange;
+  snapshot_date: string;
+  artist_id: string;
+  artist_name: string;
+  personal_rank: number;
+  global_rank: number;
+  global_rank_change_7d: number | null;
+  global_daily_streams_millions: number | null;
+}
+
+export interface TrendsData {
+  personal_vs_global: PersonalVsGlobalRow[];
+}
+
+export async function fetchTrends(): Promise<TrendsData | null> {
+  const response = await fetch(`${BACKEND_URL}/api/trends`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    return null;
+  }
+  return response.json();
+}
+
 export interface RawEndpointResult {
   path: string;
   status: number;
