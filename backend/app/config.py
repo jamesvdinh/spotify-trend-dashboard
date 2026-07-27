@@ -10,6 +10,11 @@ class Settings(BaseSettings):
     frontend_url: str = "http://127.0.0.1:5173"
     session_cookie_name: str = "session_id"
 
+    # Used by standalone ingestion scripts (backend/ingestion/), not the web app.
+    spotify_refresh_token: str | None = None
+    bq_project_id: str = "spotify-trend-dashboard"
+    google_application_credentials: str | None = None
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
