@@ -23,6 +23,12 @@ def build_authorize_url(settings: Settings, state: str) -> str:
         "redirect_uri": settings.spotify_redirect_uri,
         "state": state,
         "scope": SCOPES,
+        # Forces Spotify's consent screen to show every time instead of
+        # silently redirecting through - the closest lever a third-party app
+        # has to "re-sign-in": Spotify doesn't expose a way to force a full
+        # account logout/re-authentication, but this screen has a "Not you?"
+        # link letting the user switch accounts themselves.
+        "show_dialog": "true",
     }
     return f"{AUTHORIZE_URL}?{urlencode(params)}"
 

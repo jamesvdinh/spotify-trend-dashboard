@@ -38,6 +38,11 @@ export default function TrendsSection() {
   return (
     <div className="taste-section">
       <h2 className="section-title">Your taste vs. the world</h2>
+      <p className="status-text">
+        A single derived number per artist: how much more (or less) mainstream they are globally than your own
+        ranking implies. Red bars are bigger favorites for you than their global fame; blue bars are more mainstream
+        than your ranking suggests.
+      </p>
       <MainstreamGapRecharts rows={rows} />
     </div>
   );
