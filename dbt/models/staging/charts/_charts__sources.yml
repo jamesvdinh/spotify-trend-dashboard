@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: kworb_raw
+    database: spotify-trend-dashboard
+    schema: raw
+    tables:
+      - name: kworb_artist_streams_snapshot
+        description: >
+          Daily scrape of Kworb's global artist streams leaderboard
+          (kworb.net/spotify/artists.html), one row per (snapshot_date, artist).
+          Kworb has no API - this is HTML-table scraped by
+          backend/ingestion/kworb_scraper.py, which raises rather than loading
+          silently-wrong data if the table layout ever changes.
+        config:
+          loaded_at_field: loaded_at
+          freshness:
+            warn_after: {count: 30, period: hour}
+            error_after: {count: 48, period: hour}
+        columns:
+          - name: snapshot_date
+            tests: [not_null]
+          - name: artist_id
+            tests: [not_null]

@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: stg_charts__kworb_artist_streams
+    description: One row per (snapshot_date, artist) - deduped to the latest load.
+    columns:
+      - name: artist_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - snapshot_date
+              - artist_id

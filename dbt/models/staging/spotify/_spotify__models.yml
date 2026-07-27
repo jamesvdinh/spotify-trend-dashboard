@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_spotify__top_tracks
+    description: One row per (user, time_range, snapshot_date, track) - deduped to the latest load.
+    columns:
+      - name: track_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - time_range
+              - snapshot_date
+              - track_id
+
+  - name: stg_spotify__top_artists
+    description: One row per (user, time_range, snapshot_date, artist) - deduped to the latest load.
+    columns:
+      - name: artist_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - time_range
+              - snapshot_date
+              - artist_id

@@ -8,5 +8,11 @@ backend/.env
 frontend/node_modules/
 frontend/dist/
 
+# dbt
+dbt/.venv/
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+
 # OS
 .DS_Store

@@ -1,0 +1,46 @@
+version: 2
+
+sources:
+  - name: spotify_raw
+    database: spotify-trend-dashboard
+    schema: raw
+    tables:
+      - name: spotify_top_tracks_snapshot
+        description: >
+          Daily personal top-tracks snapshots, one row per (user, time_range,
+          snapshot_date, track). Loaded by backend/ingestion/spotify_snapshot.py.
+          Multiple loads on the same snapshot_date can occur (manual reruns,
+          Airflow retries) - stg_spotify__top_tracks dedupes to the latest.
+        config:
+          loaded_at_field: loaded_at
+          freshness:
+            warn_after: {count: 30, period: hour}
+            error_after: {count: 48, period: hour}
+        columns:
+          - name: user_id
+            tests: [not_null]
+          - name: time_range
+            tests: [not_null]
+          - name: snapshot_date
+            tests: [not_null]
+          - name: track_id
+            tests: [not_null]
+
+      - name: spotify_top_artists_snapshot
+        description: >
+          Daily personal top-artists snapshots, one row per (user, time_range,
+          snapshot_date, artist). Loaded by backend/ingestion/spotify_snapshot.py.
+        config:
+          loaded_at_field: loaded_at
+          freshness:
+            warn_after: {count: 30, period: hour}
+            error_after: {count: 48, period: hour}
+        columns:
+          - name: user_id
+            tests: [not_null]
+          - name: time_range
+            tests: [not_null]
+          - name: snapshot_date
+            tests: [not_null]
+          - name: artist_id
+            tests: [not_null]
