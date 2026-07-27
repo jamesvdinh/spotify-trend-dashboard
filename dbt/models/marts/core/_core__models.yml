@@ -1,0 +1,44 @@
+version: 2
+
+models:
+  - name: dim_artists
+    description: >
+      One row per artist, merged from personal-taste Spotify metadata and the
+      Kworb global leaderboard. in_personal_taste / in_global_chart flag which
+      source(s) an artist was seen in.
+    columns:
+      - name: artist_id
+        tests: [not_null, unique]
+
+  - name: fct_user_top_tracks
+    description: One row per (user, time_range, snapshot_date, track).
+    columns:
+      - name: track_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - time_range
+              - snapshot_date
+              - track_id
+
+  - name: fct_user_top_artists
+    description: One row per (user, time_range, snapshot_date, artist).
+    columns:
+      - name: artist_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_artists')
+                field: artist_id
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - time_range
+              - snapshot_date
+              - artist_id

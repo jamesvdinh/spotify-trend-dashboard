@@ -1,0 +1,39 @@
+version: 2
+
+models:
+  - name: fct_artist_velocity
+    description: >
+      One row per (snapshot_date, artist) with 7-day trailing rank/streams
+      change from the Kworb global leaderboard. rank_change_7d is null until
+      7 days of history have accumulated.
+    columns:
+      - name: artist_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_artists')
+                field: artist_id
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - snapshot_date
+              - artist_id
+
+  - name: fct_personal_vs_global
+    description: >
+      One row per (user, time_range, snapshot_date, artist) for artists that
+      appear in both the user's top artists and that day's global chart -
+      personal rank alongside global rank and 7-day velocity.
+    columns:
+      - name: artist_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - time_range
+              - snapshot_date
+              - artist_id

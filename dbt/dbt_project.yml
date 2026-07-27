@@ -17,3 +17,5 @@ models:
   spotify_trend_dashboard:
     staging:
       +materialized: view
+    marts:
+      +materialized: table
