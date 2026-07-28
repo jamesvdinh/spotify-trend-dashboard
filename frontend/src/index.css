@@ -122,7 +122,32 @@ button {
 
 .dashboard {
   width: 100%;
-  max-width: 720px;
+  max-width: 1120px;
+}
+
+.dashboard-columns {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 2rem;
+}
+
+.dashboard-column-left,
+.dashboard-column-right {
+  flex: 1 1 380px;
+  min-width: 0;
+}
+
+.dashboard-column-right {
+  flex: 1.3 1 420px;
+}
+
+/* First child of whichever column loses the section-spacing top margin it'd
+   normally get from a preceding sibling - both columns should start flush
+   with each other. */
+.dashboard-column-left > :first-child,
+.dashboard-column-right > :first-child {
+  margin-top: 0;
 }
 
 .profile-card {

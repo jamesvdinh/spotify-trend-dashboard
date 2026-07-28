@@ -61,11 +61,17 @@ export default function Dashboard() {
   return (
     <div className="page">
       <div className="dashboard">
-        <ProfileCard profile={profile} />
-        <NowPlaying />
-        <TasteSection />
-        {/* <ApiExplorer /> */}
-        <TrendsSection />
+        <div className="dashboard-columns">
+          <div className="dashboard-column-left">
+            <ProfileCard profile={profile} />
+            <NowPlaying />
+            <TasteSection />
+            {/* <ApiExplorer /> */}
+          </div>
+          <div className="dashboard-column-right">
+            <TrendsSection />
+          </div>
+        </div>
         <div className="dashboard-actions">
           <span className="status-text">Connected to Spotify</span>
           <button
