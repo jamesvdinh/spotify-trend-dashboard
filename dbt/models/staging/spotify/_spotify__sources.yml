@@ -44,3 +44,26 @@ sources:
             tests: [not_null]
           - name: artist_id
             tests: [not_null]
+
+      - name: spotify_now_playing_events
+        description: >
+          Now-playing change events, one row per (user, track, played_at).
+          Landed by the PySpark structured streaming job (spark/streaming_job.py)
+          reading from the Kafka topic spotify.now_playing.events, which is
+          published to by backend/streaming/now_playing_producer.py. Already
+          flattened/typed by Spark rather than a JSON blob - a deliberate
+          deviation from the other raw tables here, since Spark already parses
+          into a typed schema for its watermark/dedup and re-serializing to a
+          blob just to re-parse in dbt would add nothing.
+        config:
+          loaded_at_field: loaded_at
+          freshness:
+            warn_after: {count: 30, period: minute}
+            error_after: {count: 2, period: hour}
+        columns:
+          - name: user_id
+            tests: [not_null]
+          - name: track_id
+            tests: [not_null]
+          - name: played_at
+            tests: [not_null]

@@ -28,3 +28,16 @@ models:
               - time_range
               - snapshot_date
               - artist_id
+
+  - name: stg_spotify__now_playing
+    description: One row per (user, track, played_at) now-playing event - deduped to the latest load.
+    columns:
+      - name: track_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - track_id
+              - played_at

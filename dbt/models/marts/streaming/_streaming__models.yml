@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: fct_now_playing_events
+    description: >
+      One row per (user, track, played_at) now-playing change event, landed by
+      the PySpark streaming job (spark/streaming_job.py) from the Kafka topic
+      spotify.now_playing.events.
+    columns:
+      - name: track_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - track_id
+              - played_at
+
+  - name: fct_listening_sessions
+    description: >
+      One row per listening session per user - consecutive now-playing events
+      grouped by a 30-minute gap boundary (see session_gap_minutes in the model).
+    columns:
+      - name: user_id
+        tests: [not_null]
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns:
+              - user_id
+              - session_number
