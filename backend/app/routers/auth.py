@@ -5,7 +5,12 @@ from fastapi.responses import RedirectResponse
 
 from .. import session_store
 from ..config import Settings, get_settings
-from ..spotify_client import build_authorize_url, exchange_code_for_tokens, tokens_to_bundle
+from ..spotify_client import (
+    build_authorize_url,
+    exchange_code_for_tokens,
+    get_current_user_profile,
+    tokens_to_bundle,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -43,6 +48,8 @@ async def callback(
 
     token_response = await exchange_code_for_tokens(settings, code)
     tokens = tokens_to_bundle(token_response)
+    profile = await get_current_user_profile(tokens["access_token"])
+    tokens["user_id"] = profile["id"]
     session_id = session_store.create_session(tokens)
 
     redirect = RedirectResponse(f"{settings.frontend_url}/dashboard")

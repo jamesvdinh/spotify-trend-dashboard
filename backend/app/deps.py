@@ -18,7 +18,8 @@ async def get_access_token(
 
     if session_store.is_expired(tokens):
         token_response = await refresh_access_token(settings, tokens["refresh_token"])
-        tokens = tokens_to_bundle(token_response, previous_refresh_token=tokens["refresh_token"])
+        refreshed = tokens_to_bundle(token_response, previous_refresh_token=tokens["refresh_token"])
+        tokens = {**tokens, **refreshed}
         session_store.update_session(session_id, tokens)
 
     return tokens["access_token"]

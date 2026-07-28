@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     spotify_redirect_uri: str = "http://127.0.0.1:8000/auth/callback"
     frontend_url: str = "http://127.0.0.1:5173"
     session_cookie_name: str = "session_id"
+    redis_url: str = "redis://127.0.0.1:6379/0"
 
     # Used by standalone ingestion scripts (backend/ingestion/), not the web app.
     spotify_refresh_token: str | None = None
