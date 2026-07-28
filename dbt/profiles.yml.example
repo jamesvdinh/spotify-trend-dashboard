@@ -1,0 +1,17 @@
+# Copy to dbt/profiles.yml (gitignored) - this is what gets volume-mounted
+# into the Airflow container's dbt tasks. Your own local dbt CLI keeps using
+# ~/.dbt/profiles.yml as it already does; this file only exists so Airflow
+# has a profile to mount, since its container doesn't have your home directory.
+spotify_trend_dashboard:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: spotify-trend-dashboard
+      dataset: staging
+      keyfile: /opt/gcp/key.json
+      location: US
+      threads: 4
+      job_execution_timeout_seconds: 300
+      job_retries: 1

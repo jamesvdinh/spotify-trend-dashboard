@@ -17,6 +17,7 @@ dbt/.venv/
 dbt/target/
 dbt/logs/
 dbt/dbt_packages/
+dbt/profiles.yml
 
 # OS
 .DS_Store
