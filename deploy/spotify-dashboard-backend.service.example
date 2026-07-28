@@ -1,0 +1,26 @@
+# Copy to /etc/systemd/system/spotify-dashboard-backend.service on the VPS,
+# adjust the paths/user, then:
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now spotify-dashboard-backend
+#
+# Runs the FastAPI backend directly on the host (not containerized) - same
+# command as local dev (`uvicorn app.main:app`), just supervised by systemd
+# instead of a dev terminal. It talks to Redis/Kafka via the ports
+# docker-compose exposes on localhost.
+
+[Unit]
+Description=Spotify Trend Dashboard - FastAPI backend
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=deploy
+WorkingDirectory=/opt/spotify-trend-dashboard/backend
+EnvironmentFile=/opt/spotify-trend-dashboard/backend/.env
+ExecStart=/opt/spotify-trend-dashboard/backend/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

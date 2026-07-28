@@ -1,0 +1,10 @@
+# Copy to /etc/caddy/Caddyfile on the VPS and replace the domain. Caddy
+# handles Let's Encrypt HTTPS automatically - no separate certbot setup.
+#
+# Only the FastAPI backend is exposed publicly. The Airflow UI is
+# deliberately NOT proxied here - it's an operational tool, reachable only
+# via an SSH tunnel (see deploy/README.md), not part of the public surface.
+
+api.yourdomain.com {
+    reverse_proxy 127.0.0.1:8000
+}
