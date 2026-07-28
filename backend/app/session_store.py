@@ -4,9 +4,10 @@ Backed by Redis (not an in-process dict) because sessions must be visible
 outside the request/response cycle: the streaming poller (backend/streaming/)
 runs as its own process and needs to read/refresh the same access tokens.
 """
+import json
 import time
 import uuid
-from typing import Optional, TypedDict
+from typing import Any, Optional, TypedDict
 
 import redis
 
@@ -14,6 +15,9 @@ from .config import get_settings
 
 SESSION_KEY_PREFIX = "session:"
 ACTIVE_SESSIONS_KEY = "sessions:active"
+NOW_PLAYING_KEY_PREFIX = "nowplaying:"
+NOW_PLAYING_TTL_SECONDS = 60
+PRODUCER_HEALTH_KEY = "health:producer:last_tick"
 
 
 class TokenBundle(TypedDict):
@@ -67,3 +71,34 @@ def touch_last_seen(session_id: str) -> None:
     currently in the app.
     """
     _redis.zadd(ACTIVE_SESSIONS_KEY, {session_id: time.time()})
+
+
+def active_session_ids(within_seconds: float) -> list[str]:
+    """Session ids that sent a heartbeat within the last `within_seconds`."""
+    cutoff = time.time() - within_seconds
+    return _redis.zrangebyscore(ACTIVE_SESSIONS_KEY, cutoff, "+inf")
+
+
+def _now_playing_key(user_id: str) -> str:
+    return f"{NOW_PLAYING_KEY_PREFIX}{user_id}"
+
+
+def get_now_playing(user_id: str) -> Optional[dict[str, Any]]:
+    """The hot-path cache the /api/now-playing endpoint reads from."""
+    raw = _redis.get(_now_playing_key(user_id))
+    return json.loads(raw) if raw else None
+
+
+def set_now_playing(user_id: str, event: dict[str, Any]) -> None:
+    """Written by the streaming poller on every real change (track/playing-state
+    flip). TTL'd so a dead poller or closed tab self-heals to "nothing playing"
+    instead of showing a frozen stale state forever.
+    """
+    _redis.set(_now_playing_key(user_id), json.dumps(event), ex=NOW_PLAYING_TTL_SECONDS)
+
+
+def record_producer_heartbeat() -> None:
+    """Written by the streaming poller each loop; read by an Airflow health
+    check to detect a dead/stuck poller.
+    """
+    _redis.set(PRODUCER_HEALTH_KEY, time.time())

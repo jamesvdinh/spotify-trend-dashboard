@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import { fetchProfile, heartbeat, logout } from "../api";
 import type { SpotifyProfile } from "../utils/types/profile";
 import ProfileCard from "../components/ProfileCard";
+import NowPlaying from "../components/NowPlaying";
 import TasteSection from "../components/TasteSection";
 import TrendsSection from "../components/TrendsSection";
 // import ApiExplorer from "../components/ApiExplorer";
@@ -61,6 +62,7 @@ export default function Dashboard() {
     <div className="page">
       <div className="dashboard">
         <ProfileCard profile={profile} />
+        <NowPlaying />
         <TasteSection />
         {/* <ApiExplorer /> */}
         <TrendsSection />

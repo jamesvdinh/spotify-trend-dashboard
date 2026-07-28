@@ -67,3 +67,19 @@ async def heartbeat(session_id: str = Depends(require_session)):
     """
     session_store.touch_last_seen(session_id)
     return {"ok": True}
+
+
+@router.get("/now-playing")
+async def now_playing(session_id: str = Depends(require_session)):
+    """Reads the streaming poller's hot-path Redis cache directly - no
+    Spotify call here, so this stays cheap enough for the frontend to poll
+    every few seconds.
+    """
+    tokens = session_store.get_session(session_id)
+    if tokens is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Session expired or unknown")
+
+    event = session_store.get_now_playing(tokens["user_id"])
+    if event is None:
+        return {"is_playing": False}
+    return event

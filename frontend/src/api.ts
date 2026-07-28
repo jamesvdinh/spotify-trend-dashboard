@@ -2,6 +2,7 @@ import type { SpotifyProfile } from "./utils/types/profile";
 import type { TasteResult } from "./utils/types/taste";
 import type { TrendsData } from "./utils/types/trends";
 import type { RawEndpointResult } from "./utils/types/apiExplorer";
+import type { NowPlayingData } from "./utils/types/nowPlaying";
 
 export const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ?? "http://127.0.0.1:8000";
 
@@ -49,6 +50,16 @@ export async function logout(): Promise<void> {
 
 export function loginUrl(): string {
   return `${BACKEND_URL}/auth/login`;
+}
+
+export async function fetchNowPlaying(): Promise<NowPlayingData | null> {
+  const response = await fetch(`${BACKEND_URL}/api/now-playing`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    return null;
+  }
+  return response.json();
 }
 
 export async function fetchTrends(): Promise<TrendsData | null> {
