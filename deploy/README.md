@@ -100,16 +100,30 @@ sudo ufw allow 443
 sudo ufw enable
 ```
 
-## 7. Frontend + Spotify app config
+## 7. Frontend on GitHub Pages
 
-Deploy the static Vite build to GitHub Pages or Vercel, with
-`VITE_BACKEND_URL` set to your VPS's public domain (e.g.
-`https://api.yourdomain.com`).
+`.github/workflows/deploy-frontend.yml` builds and deploys `frontend/` on
+every push to `main`. One-time setup:
 
-Then update:
+- Repo Settings → Pages → Source → **GitHub Actions** (not "Deploy from a
+  branch").
+- Repo Settings → Secrets and variables → Actions → **Variables** → add
+  `VITE_BACKEND_URL` = your VPS's public domain (e.g. `https://api.yourdomain.com`).
+  It's a plain URL, not a secret, but Vite bakes it in at build time, so it
+  has to be set here rather than in `backend/.env`.
 
-- `Settings.frontend_url` / CORS in `backend/.env` to the deployed frontend's
-  origin.
+The frontend uses `HashRouter` (URLs like `/#/dashboard`) specifically
+because GitHub Pages has no server-side rewrites - a direct request to a real
+path like `/dashboard` (e.g. the backend's post-login redirect) would 404 on
+a static host.
+
+Then point the backend and Spotify app at the deployed frontend. `FRONTEND_URL`
+must be the **bare origin** (CORS matches on origin only, not path);
+`FRONTEND_APP_PATH` carries the GitHub Pages project-site subpath, since the
+post-login redirect needs the full path:
+
+- `backend/.env`: `FRONTEND_URL=https://you.github.io`,
+  `FRONTEND_APP_PATH=/spotify-trend-dashboard`.
 - The Spotify app's registered Redirect URI (in the
-  [Spotify developer dashboard](https://developer.spotify.com/dashboard)) to
+  [Spotify developer dashboard](https://developer.spotify.com/dashboard)) →
   `https://api.yourdomain.com/auth/callback`.

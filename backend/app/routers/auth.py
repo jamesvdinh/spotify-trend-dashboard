@@ -52,7 +52,12 @@ async def callback(
     tokens["user_id"] = profile["id"]
     session_id = session_store.create_session(tokens)
 
-    redirect = RedirectResponse(f"{settings.frontend_url}/dashboard")
+    # Hash route, not a real path: the frontend uses HashRouter (needed for
+    # GitHub Pages, which has no server-side rewrites), so /dashboard has to
+    # live after the # or a direct request to it 404s on a static host.
+    # frontend_app_path (not frontend_url alone) carries any GitHub Pages
+    # project-site subpath - frontend_url has to stay a bare origin for CORS.
+    redirect = RedirectResponse(f"{settings.frontend_url}{settings.frontend_app_path}/#/dashboard")
     redirect.delete_cookie(STATE_COOKIE_NAME)
     redirect.set_cookie(
         settings.session_cookie_name,

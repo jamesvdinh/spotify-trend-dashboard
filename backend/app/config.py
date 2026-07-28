@@ -8,6 +8,12 @@ class Settings(BaseSettings):
     spotify_client_secret: str
     spotify_redirect_uri: str = "http://127.0.0.1:8000/auth/callback"
     frontend_url: str = "http://127.0.0.1:5173"
+    # Path under frontend_url where the app actually lives, e.g.
+    # "/spotify-trend-dashboard" for a GitHub Pages project site. Kept
+    # separate from frontend_url because CORS needs the bare origin (no
+    # path), while the post-login redirect needs the full path - a GitHub
+    # Pages project site is the case where those two differ.
+    frontend_app_path: str = ""
     session_cookie_name: str = "session_id"
     redis_url: str = "redis://127.0.0.1:6379/0"
     kafka_bootstrap_servers: str = "127.0.0.1:9092"
