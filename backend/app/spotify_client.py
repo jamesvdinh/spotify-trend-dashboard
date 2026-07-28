@@ -12,8 +12,9 @@ TOKEN_URL = "https://accounts.spotify.com/api/token"
 ME_URL = "https://api.spotify.com/v1/me"
 TOP_TRACKS_URL = "https://api.spotify.com/v1/me/top/tracks"
 TOP_ARTISTS_URL = "https://api.spotify.com/v1/me/top/artists"
+CURRENTLY_PLAYING_URL = "https://api.spotify.com/v1/me/player/currently-playing"
 
-SCOPES = "user-read-private user-read-email user-top-read"
+SCOPES = "user-read-private user-read-email user-top-read user-read-currently-playing"
 
 
 def build_authorize_url(settings: Settings, state: str) -> str:
@@ -99,5 +100,23 @@ async def get_top_artists(access_token: str, time_range: str = "long_term", limi
             params={"time_range": time_range, "limit": limit},
             headers={"Authorization": f"Bearer {access_token}"},
         )
+        response.raise_for_status()
+        return response.json()
+
+
+async def get_currently_playing(access_token: str) -> dict[str, Any] | None:
+    """Returns the current playback state, or None if nothing is playing.
+
+    Unlike the other endpoints here, Spotify returns a bare 204 (no body) for
+    "nothing playing" instead of a 200 with an empty-ish payload, so that case
+    has to be handled explicitly rather than just parsing response.json().
+    """
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            CURRENTLY_PLAYING_URL,
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        if response.status_code == 204:
+            return None
         response.raise_for_status()
         return response.json()

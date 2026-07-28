@@ -3,8 +3,8 @@ import asyncio
 import httpx
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from .. import bigquery_queries, taste_metrics
-from ..deps import get_access_token
+from .. import bigquery_queries, session_store, taste_metrics
+from ..deps import get_access_token, require_session
 from ..spotify_client import get_current_user_profile, get_top_artists, get_top_tracks
 
 router = APIRouter(prefix="/api", tags=["api"])
@@ -57,3 +57,13 @@ async def trends(access_token: str = Depends(get_access_token)):
     user_id = profile.get("id")
     rows = await asyncio.to_thread(bigquery_queries.query_personal_vs_global, user_id)
     return {"personal_vs_global": rows}
+
+
+@router.post("/heartbeat")
+async def heartbeat(session_id: str = Depends(require_session)):
+    """Called periodically by the frontend while the dashboard is open, so the
+    streaming poller (backend/streaming/) knows which users are actively in
+    the app right now.
+    """
+    session_store.touch_last_seen(session_id)
+    return {"ok": True}

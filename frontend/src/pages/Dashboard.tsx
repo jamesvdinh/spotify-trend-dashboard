@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { fetchProfile, logout } from "../api";
+import { fetchProfile, heartbeat, logout } from "../api";
 import type { SpotifyProfile } from "../utils/types/profile";
 import ProfileCard from "../components/ProfileCard";
 import TasteSection from "../components/TasteSection";
@@ -25,6 +25,15 @@ export default function Dashboard() {
       })
       .catch(() => setStatus("error"));
   }, []);
+
+  useEffect(() => {
+    if (status !== "authed") {
+      return;
+    }
+    heartbeat();
+    const intervalId = setInterval(heartbeat, 15_000);
+    return () => clearInterval(intervalId);
+  }, [status]);
 
   if (status === "loading") {
     return (

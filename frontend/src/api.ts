@@ -33,6 +33,13 @@ export async function fetchTaste(): Promise<TasteResult> {
   return { status: "ok", data: await response.json() };
 }
 
+export async function heartbeat(): Promise<void> {
+  await fetch(`${BACKEND_URL}/api/heartbeat`, {
+    method: "POST",
+    credentials: "include",
+  });
+}
+
 export async function logout(): Promise<void> {
   await fetch(`${BACKEND_URL}/auth/logout`, {
     method: "POST",

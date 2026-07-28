@@ -23,3 +23,21 @@ async def get_access_token(
         session_store.update_session(session_id, tokens)
 
     return tokens["access_token"]
+
+
+async def require_session(
+    session_id: str | None = Cookie(default=None, alias="session_id"),
+) -> str:
+    """Confirms a session exists, without touching Spotify.
+
+    Used by endpoints that only need to know "is this a logged-in user"
+    (heartbeat, now-playing reads) — unlike get_access_token, this never
+    refreshes a token, so it's cheap enough to call on every heartbeat tick.
+    """
+    if session_id is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Not logged in")
+
+    if session_store.get_session(session_id) is None:
+        raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Session expired or unknown")
+
+    return session_id
