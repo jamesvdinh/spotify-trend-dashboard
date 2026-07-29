@@ -5,10 +5,9 @@ one-off deviation from the ingestion-scripts' raw-JSON convention, since
 Spark already has to parse into a StructType for the watermark/dedup and
 re-serializing to a blob just to re-parse it in dbt would add nothing.
 
-Run via:
-  spark-submit \
-    --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.36.1 \
-    spark/streaming_job.py
+Run via: python spark/streaming_job.py (see spark/Dockerfile - this runs as
+a plain pip-installed pyspark script, not spark-submit, since it doesn't
+depend on any prebuilt Spark distribution image).
 """
 import os
 
@@ -23,6 +22,10 @@ from pyspark.sql.types import (
     StructType,
 )
 
+SPARK_PACKAGES = (
+    "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,"
+    "com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.36.1"
+)
 KAFKA_BOOTSTRAP_SERVERS = os.environ.get("KAFKA_BOOTSTRAP_SERVERS", "kafka:29092")
 KAFKA_TOPIC = "spotify.now_playing.events"
 BQ_PROJECT_ID = os.environ.get("BQ_PROJECT_ID", "spotify-trend-dashboard")
@@ -85,7 +88,11 @@ def write_batch_to_bigquery(batch_df: DataFrame, batch_id: int) -> None:
 
 
 def main() -> None:
-    spark = SparkSession.builder.appName("spotify-now-playing-streaming").getOrCreate()
+    spark = (
+        SparkSession.builder.appName("spotify-now-playing-streaming")
+        .config("spark.jars.packages", SPARK_PACKAGES)
+        .getOrCreate()
+    )
     spark.sparkContext.setLogLevel("WARN")
 
     events = build_events_df(spark)

@@ -44,24 +44,21 @@ services:
       - kafka
     restart: unless-stopped
 
-  # Single spark-submit container - no separate master/worker needed for a
-  # single-node personal-project deployment. Requires GOOGLE_APPLICATION_CREDENTIALS_HOST
-  # set in a root .env (see .env.example) pointing at the same GCP service-account
-  # key file the ingestion scripts already use.
+  # Single-container structured streaming job - no separate master/worker
+  # needed for a single-node personal-project deployment. Built from our own
+  # Dockerfile (see spark/Dockerfile for why, not a prebuilt Spark image).
+  # Requires GOOGLE_APPLICATION_CREDENTIALS_HOST set in a root .env (see
+  # .env.example) pointing at the same GCP service-account key file the
+  # ingestion scripts already use.
   spark:
-    image: bitnami/spark:3.5
-    command:
-      - spark-submit
-      - --packages
-      - org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1,com.google.cloud.spark:spark-bigquery-with-dependencies_2.12:0.36.1
-      - /opt/spark-app/streaming_job.py
+    build:
+      context: ./spark
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       BQ_PROJECT_ID: ${BQ_PROJECT_ID:-spotify-trend-dashboard}
       GOOGLE_APPLICATION_CREDENTIALS: /opt/gcp/key.json
       CHECKPOINT_LOCATION: /opt/spark-checkpoints/now_playing
     volumes:
-      - ./spark:/opt/spark-app
       - spark_checkpoints:/opt/spark-checkpoints
       - ${GOOGLE_APPLICATION_CREDENTIALS_HOST}:/opt/gcp/key.json:ro
     depends_on:
